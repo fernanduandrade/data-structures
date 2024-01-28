@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Ephesis&family=Nunito:wght@300;400;500;600;700&display=swap');
+
+body {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 400;
+  background-color: rgb(55 65 81);
+}
+
+#node-wrapper {
+  border-radius: 4px;
+  padding: 10px;
+  display: flex;
+  position: relative;
+  width: 700px;
+  height: 300px;
+}
+
+#node-wrapper .node {
+  border: 3px solid #333;
+  border-radius: 50%;
+  padding: 20px;
+  width: 60px;
+  height: 60px;
+  color: #fff;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: .2s ease-in-out;
+}
+
+#node-wrapper .node:hover {
+  cursor: grab;
+  width: 80px;
+  height: 80px;
+}
+
+#node-wrapper .node span {
+  text-shadow: 2px 0 #333, -2px 0 #333, 0 2px #333, 0 -2px #333,
+             1px 1px #333, -1px -1px #333, 1px -1px #333, -1px 1px #333;
+}
+
+.arrow {
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  z-index: 1;
+}
+
+.arrow.right {
+  border-width: 10px 0 10px 20px;
+  border-color: transparent transparent transparent #3498db;
+  left: 80px;
+  top: 35px;
+}
+
+
+.line {
+  position: absolute;
+  z-index: 0;
+}
