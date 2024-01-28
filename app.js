@@ -26,8 +26,6 @@ node1.next = node2
 node2.next = node3
 node3.next = node5
 node5.next = node4
-node4.next = node6
-node6.next = node7
 
 let linkList = new LinkList(node1)
 
@@ -61,30 +59,46 @@ function getPosition(parentWidth, parentHeight, childWidth, childHeight, existin
 }
 
 function calculateAngleBetweenNode(from, to) {
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-  const angle = Math.atan2(dy, dx);
+  const deltaX = from.x - to.x;
+  const deltaY = from.y - to.y
+  const angle = Math.atan2(deltaY, deltaX);
   return angle
 }
 
 function calculateDistanceBetwenNode(from, to) {
-  const dx = to.left + to.width / 2 - (from.left + from.width / 2);
-  const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+  const dx = to.left - from .x;
+  const dy = to.top - from.y;
   const distance = Math.sqrt(dx * dx + dy * dy);
   return distance
 }
 
+function getPositionAtCenter({top, left, width, height}) {
+  return {
+    x: left + width / 2,
+    y: top + height / 2
+  };
+}
+
+function getDistanceBetweenElements(a, b) {
+  const aPosition = getPositionAtCenter(a);
+  const bPosition = getPositionAtCenter(b);
+
+  return Math.hypot(aPosition.x - bPosition.x, aPosition.y - bPosition.y);  
+}
+
 function drawLine(parentElement, from, to, color) {
-  var line = document.createElement("div");
-  line.style.border = `2px solid ${color}`
-  line.className = "line";
-  const distance = calculateDistanceBetwenNode(from, to)
+  var line = document.createElement('canvas');
+  const distance = Math.sqrt(Math.pow(to.top - from.top, 2) + Math.pow(to.left - from.left, 2));
   const angle = calculateAngleBetweenNode(from, to)
+  line.width = distance;
+  line.height = 4
+  line.style.border = "2px solid #333"
+  line.style.backgroundColor = `${color}`
   
-  line.style.width = distance + "px";
+  line.style.width = distance  + "px";
   line.style.transform = "rotate(" + angle + "rad)";
-  line.style.left = (from.left + from.width / 2) + "px";
-  line.style.top = (from.top + from.height / 2) + "px";
+  line.style.left = (((from.x + to.x) / 2) - 40) + "px";
+  line.style.top = (((from.top + to.top) / 2) - 70) + "px";
 
   parentElement.appendChild(line);
 }
@@ -128,32 +142,41 @@ function makeDraggable(element) {
 }
 
 function createNode(parentElement, currentNodeElement, elementsPosition) {
+  const nodeWidth = 80;
+  const nodeHeight = 80;
   const node = document.createElement('div')
+  
   node.classList.add('node')
   const color = randomColor()
   node.style.backgroundColor = color
-  const randomPosition= getPosition(parentElement.clientWidth, parentElement.clientHeight, node.clientWidth, node.clientHeight, existingPositions)
-  node.style.marginTop = `${Math.min(randomPosition.top, parentElement.clientHeight - 60)}px` 
-  node.style.marginLeft = `${Math.min(randomPosition.left, parentElement.clientWidth - 60)}px`
+  const randomPosition= getPosition(parentElement.clientWidth, parentElement.clientHeight, nodeWidth, nodeHeight, existingPositions)
+  node.style.top = `${Math.min(randomPosition.top, parentElement.clientHeight - nodeHeight)}px` 
+  node.style.left = `${Math.min(randomPosition.left, parentElement.clientWidth - nodeWidth)}px`
   node.draggable = true
   makeDraggable(node)
+
 
   const text = document.createElement('span')
   node.appendChild(text)
   text.innerText =  currentNodeElement.data
 
   parentElement.appendChild(node)
+  const { x, y, left, top, width, height } = node.getBoundingClientRect()
 
-  elementsPosition.push({
-    left: parseInt(randomPosition.left),
-    top: parseInt(randomPosition.top),
-    width: node.clientWidth,
-    height: node.clientHeight
-  });
+  const position = {
+    left,
+    top,
+    width,
+    height,
+    x,
+    y
+  }
 
-  if (elementsPosition.length > 1) {
+  elementsPosition.push(position);
+
+  if (elementsPosition.length > 1 && currentNodeElement.next) {
     const prevNode = elementsPosition[elementsPosition.length - 2];
-    drawLine(parentElement, prevNode, randomPosition, color);
+    drawLine(parentElement, prevNode, position, color);
   }
 
   return node

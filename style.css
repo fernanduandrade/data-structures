@@ -3,10 +3,9 @@
 body {
   display: flex;
   flex-direction: column;
-  color: #fff;
+  color: #333;
   font-family: 'Nunito', sans-serif;
   font-weight: 400;
-  background-color: rgb(55 65 81);
 }
 
 #node-wrapper {
@@ -14,16 +13,14 @@ body {
   padding: 10px;
   display: flex;
   position: relative;
-  width: 700px;
-  height: 300px;
+  width: 600px;
+  height: 400px;
 }
 
 #node-wrapper .node {
   border: 3px solid #333;
   border-radius: 50%;
   padding: 20px;
-  width: 60px;
-  height: 60px;
   color: #fff;
   position: absolute;
   display: flex;
@@ -34,8 +31,6 @@ body {
 
 #node-wrapper .node:hover {
   cursor: grab;
-  width: 80px;
-  height: 80px;
 }
 
 #node-wrapper .node span {
@@ -51,15 +46,15 @@ body {
   z-index: 1;
 }
 
-.arrow.right {
-  border-width: 10px 0 10px 20px;
-  border-color: transparent transparent transparent #3498db;
-  left: 80px;
-  top: 35px;
-}
-
 
 .line {
   position: absolute;
-  z-index: 0;
+  height: 10px;
+  z-index: 1;
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
